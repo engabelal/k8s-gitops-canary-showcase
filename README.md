@@ -15,6 +15,16 @@ A complete demonstration of progressive delivery with traffic splitting, automat
 
 This project showcases a **real-world Canary deployment** implemented on a **private VPS** using modern Kubernetes tools and GitOps practices. It demonstrates how to safely roll out new versions by gradually shifting traffic between stable and canary releases.
 
+### 🚨 Important Note
+
+> **This is a public showcase repository.** The actual production deployment is running on my **private VPS** with:
+> - **Kubernetes v1.35** (kubeadm cluster)
+> - **ArgoCD** connected to a private Git repository
+> - **Envoy Gateway API** for traffic management
+> - Live canary deployment with real traffic splitting
+>
+> This repository contains sanitized configurations and serves as a **portfolio demonstration** of the implementation. Screenshots are from the actual production environment.
+
 ### ✨ Key Features
 
 - 🚀 **GitOps-driven deployments** - All changes managed through Git
@@ -119,6 +129,8 @@ k8s-gitops-canary-showcase/
 ---
 
 ## 🚀 Quick Start
+
+> **Note:** These instructions are for replicating the setup in your own environment. The production deployment shown in screenshots is running on a private infrastructure.
 
 ### Prerequisites
 
@@ -276,13 +288,21 @@ Commit and push - changes apply immediately (tracked at HEAD).
 
 ## 🛠️ Technology Stack
 
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| **Container Orchestration** | Kubernetes | Cluster management |
-| **GitOps** | ArgoCD | Automated deployments |
-| **Traffic Management** | Gateway API + Envoy | Intelligent routing |
-| **Web Server** | NGINX | Application runtime |
-| **Version Control** | Git Tags | Release management |
+| Component | Technology | Version | Purpose |
+|-----------|-----------|---------|----------|
+| **Container Orchestration** | Kubernetes (kubeadm) | v1.35 | Cluster management |
+| **GitOps** | ArgoCD | Latest | Automated deployments |
+| **Traffic Management** | Envoy Gateway API | v1.0+ | Intelligent routing |
+| **Web Server** | NGINX | stable-alpine | Application runtime |
+| **Version Control** | Git Tags | - | Release management |
+
+### Production Environment
+
+- 💻 **Infrastructure**: Private VPS
+- ☸️ **Kubernetes**: v1.35 (kubeadm cluster)
+- 🔄 **GitOps**: ArgoCD with private repository sync
+- 🌐 **Ingress**: Envoy Gateway API implementation
+- 🔒 **Security**: TLS/SSL enabled with custom domain
 
 ---
 
@@ -382,9 +402,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Built and tested on a **private VPS infrastructure**
+- **Production deployment** running on private VPS with Kubernetes v1.35 (kubeadm)
+- **ArgoCD** connected to private Git repository for actual GitOps workflow
+- **Envoy Gateway API** handling real traffic with canary distribution
 - Inspired by modern GitOps and progressive delivery practices
 - Uses open-source tools from the CNCF ecosystem
+- Screenshots captured from live production environment
 
 ---
 
