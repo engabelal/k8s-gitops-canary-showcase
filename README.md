@@ -21,6 +21,9 @@ This project showcases a **real-world Canary deployment** implemented on a **pri
 > - **Kubernetes v1.35** (kubeadm cluster)
 > - **ArgoCD** connected to a private Git repository
 > - **Envoy Gateway API** for traffic management
+> - **Custom Domain**: `cloudycode.dev` with subdomain routing (e.g., `canary.cloudycode.dev`)
+> - **cert-manager** with Cloudflare DNS-01 challenge for automatic SSL certificates
+> - **Cloudflare API integration** for automated DNS management
 > - Live canary deployment with real traffic splitting
 >
 > This repository contains sanitized configurations and serves as a **portfolio demonstration** of the implementation. Screenshots are from the actual production environment.
@@ -302,7 +305,10 @@ Commit and push - changes apply immediately (tracked at HEAD).
 - ☸️ **Kubernetes**: v1.35 (kubeadm cluster)
 - 🔄 **GitOps**: ArgoCD with private repository sync
 - 🌐 **Ingress**: Envoy Gateway API implementation
-- 🔒 **Security**: TLS/SSL enabled with custom domain
+- 🌍 **Domain**: `cloudycode.dev` (all apps use subdomains)
+- 🔒 **SSL/TLS**: cert-manager with Let's Encrypt
+- ☁️ **DNS**: Cloudflare with automated DNS-01 challenge
+- 🔑 **Automation**: Cloudflare API token for certificate validation
 
 ---
 
@@ -336,6 +342,54 @@ This project demonstrates:
 - ✅ Traffic splitting strategies
 - ✅ ApplicationSet generators
 - ✅ Multi-environment deployments
+- ✅ Automated SSL certificate management with cert-manager
+- ✅ DNS-01 challenge with Cloudflare API integration
+- ✅ Custom domain with subdomain routing
+
+---
+
+## 🔐 SSL & DNS Automation (Production Setup)
+
+In the production environment, SSL certificates and DNS are fully automated:
+
+### cert-manager Configuration
+
+```yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: your-email@example.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: cloudflare-api-token
+            key: api-token
+```
+
+### How It Works
+
+1. **New app deployed** → HTTPRoute created with hostname (e.g., `canary.cloudycode.dev`)
+2. **cert-manager detects** → Initiates certificate request to Let's Encrypt
+3. **DNS-01 challenge** → cert-manager uses Cloudflare API token
+4. **TXT record created** → Automatically added to `cloudycode.dev` zone
+5. **Validation complete** → Certificate issued and stored in Kubernetes Secret
+6. **Gateway configured** → Envoy Gateway uses certificate for TLS termination
+7. **Auto-renewal** → cert-manager renews certificates before expiration
+
+### Benefits
+
+- 🔒 **Automatic SSL** - No manual certificate management
+- 🌐 **Wildcard support** - `*.cloudycode.dev` covers all subdomains
+- 🔄 **Auto-renewal** - Certificates renewed automatically
+- ☁️ **DNS automation** - No manual DNS record creation
+- 🚀 **Zero downtime** - Seamless certificate rotation
 
 ---
 
@@ -403,11 +457,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - **Production deployment** running on private VPS with Kubernetes v1.35 (kubeadm)
+- **Custom domain** `cloudycode.dev` with subdomain-based app routing
+- **Automated SSL** via cert-manager + Let's Encrypt with Cloudflare DNS-01 challenge
 - **ArgoCD** connected to private Git repository for actual GitOps workflow
 - **Envoy Gateway API** handling real traffic with canary distribution
 - Inspired by modern GitOps and progressive delivery practices
 - Uses open-source tools from the CNCF ecosystem
-- Screenshots captured from live production environment
+- Screenshots captured from live production environment at `canary.cloudycode.dev`
 
 ---
 
