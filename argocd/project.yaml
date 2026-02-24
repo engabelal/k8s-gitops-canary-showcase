@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: canary-project
+  namespace: argocd
+spec:
+  description: Canary Deployment Demo Project
+  sourceRepos:
+    - 'https://github.com/YOUR_USERNAME/k8s-gitops-canary-showcase.git'
+  destinations:
+    - namespace: 'canary-demo'
+      server: 'https://kubernetes.default.svc'
+    - namespace: 'envoy-gateway-system'
+      server: 'https://kubernetes.default.svc'
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace

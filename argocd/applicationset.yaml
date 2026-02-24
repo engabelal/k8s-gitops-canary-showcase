@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: canary-nginx
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - version: stable
+            revision: v1.0.0
+          - version: canary
+            revision: v2.0.1
+  template:
+    metadata:
+      name: 'nginx-{{version}}'
+      labels:
+        app: canary-nginx
+        version: '{{version}}'
+    spec:
+      project: canary-project
+      source:
+        repoURL: 'https://github.com/YOUR_USERNAME/k8s-gitops-canary-showcase.git'
+        targetRevision: '{{revision}}'
+        path: 'k8s-manifests/{{version}}'
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: canary-demo
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

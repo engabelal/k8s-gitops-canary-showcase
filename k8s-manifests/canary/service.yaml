@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-canary-svc
+  labels:
+    app: canary-nginx
+    version: canary
+spec:
+  selector:
+    app: canary-nginx
+    version: canary
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP
